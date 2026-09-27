@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%">
+  <defs>
+    <!-- Background Icon Gradient -->
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D2B4"/>
+      <stop offset="100%" stop-color="#0E8B94"/>
+    </linearGradient>
+
+    <!-- Drop Shadow for App Icon -->
+    <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0E8B94" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- ================= APP ICON (Squircle) ================= -->
+  <g transform="translate(60, 80)">
+    <!-- App Icon Base -->
+    <rect width="240" height="240" rx="56" fill="url(#brandGrad)" filter="url(#softShadow)"/>
+
+    <!-- Globe Grid Lines (White / Semi-transparent) -->
+    <g transform="translate(120, 135)" fill="none" stroke="#FFFFFF" stroke-width="4.5" opacity="0.45">
+      <!-- Latitude lines -->
+      <ellipse cx="0" cy="0" rx="55" ry="55"/>
+      <ellipse cx="0" cy="0" rx="55" ry="24"/>
+      <line x1="-55" y1="0" x2="55" y2="0"/>
+      <!-- Longitude lines -->
+      <ellipse cx="0" cy="0" rx="26" ry="55"/>
+      <line x1="0" y1="-55" x2="0" y2="55"/>
+    </g>
+
+    <!-- 'd' Lettermark + Upward Travel Swoosh / Arrow -->
+    <!-- The swoosh forms the base circle of 'd' and shoots upward -->
+    <path d="M 68,140 
+             C 68,102 98,78 135,78 
+             C 152,78 167,84 176,95 
+             L 176,50 
+             C 176,44 182,40 188,40 
+             C 194,40 200,44 200,50 
+             L 200,105 
+             L 218,87 
+             C 222,83 228,83 232,87 
+             C 236,91 236,97 232,101 
+             L 194,139 
+             C 190,143 184,143 180,139 
+             L 165,124" 
+          fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Dynamic Swoosh / Flight Path circling under 'd' -->
+    <path d="M 52,145 
+             C 54,190 98,206 142,198 
+             C 178,191 204,168 220,138" 
+          fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+
+    <!-- Map Pin Dot Inside 'd' -->
+    <circle cx="132" cy="138" r="14" fill="#FFFFFF"/>
+    <circle cx="132" cy="138" r="6" fill="#0E8B94"/>
+  </g>
+
+  <!-- ================= TYPOGRAPHY ================= -->
+  <!-- 'dotrip' Wordmark -->
+  <text x="340" y="225" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Montserrat', sans-serif" 
+        font-size="102" 
+        font-weight="800" 
+        letter-spacing="-1.5" 
+        fill="#0E8B94">
+    do<tspan fill="#00BFA5">trip</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="345" y="275" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        font-size="20" 
+        font-weight="700" 
+        letter-spacing="6.5" 
+        fill="#5A7184">
+    EXPLORE. BOOK. ADVENTURE.
+  </text>
+</svg>
