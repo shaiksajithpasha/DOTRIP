@@ -6,6 +6,14 @@ from app.models import User
 from app.auth.router import router as auth_router
 from app.users.router import router as users_router
 from app.dashboard.router import router as dashboard_router
+from app.drivers.router import router as drivers_router
+from app.vehicle_types.router import router as vehicle_types_router
+from app.vehicles.router import router as vehicles_router
+from app.vendors.router import router as vendors_router
+from app.bookings.router import router as bookings_router
+from app.trips.router import router as trips_router 
+from app.invoices.router import router as invoices_router
+
 
 app = FastAPI()
 
@@ -28,7 +36,13 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(dashboard_router)
-
+app.include_router(drivers_router)
+app.include_router(vehicle_types_router)
+app.include_router(vehicles_router)
+app.include_router(vendors_router)
+app.include_router(bookings_router)
+app.include_router(trips_router)
+app.include_router(invoices_router)
 
 @app.get("/")
 def home():
