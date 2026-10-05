@@ -1,8 +1,10 @@
-
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+import bcrypt
 
 from app.models.driver import Driver
+from app.models.user import User
+from app.models.enums import Role
 from app.drivers.schemas import DriverCreate, DriverUpdate
 
 
@@ -27,6 +29,7 @@ def get_driver_by_id(db: Session, driver_id: int):
 
 
 def create_driver(db: Session, data: DriverCreate):
+    # Check duplicate license number
     existing_license = (
         db.query(Driver)
         .filter(
@@ -41,37 +44,99 @@ def create_driver(db: Session, data: DriverCreate):
             detail="License number already exists",
         )
 
-    driver = Driver(
-        fullName=data.fullName,
-        phone=data.phone,
-        email=data.email,
-        licenseNumber=data.licenseNumber,
-        licenseExpiry=data.licenseExpiry,
-        isPartTime=data.isPartTime,
-        isAvailable=data.isAvailable,
-        licenseImage=data.licenseImage,
-        rcImage=data.rcImage,
-        profileImage=data.profileImage,
-        whatsappPhone=data.whatsappPhone,
-        altPhone=data.altPhone,
-        licenseIssueDate=data.licenseIssueDate,
-        dob=data.dob,
-        gender=data.gender,
-        bloodGroup=data.bloodGroup,
-        aadhaarNumber=data.aadhaarNumber,
-        panNumber=data.panNumber,
-        voterId=data.voterId,
-        address=data.address,
-        assignedVehicleId=data.assignedVehicleId,
-        vendorId=data.vendorId,
-        userId=data.userId,
+    # Check duplicate User email
+    existing_email = (
+        db.query(User)
+        .filter(User.email == data.email)
+        .first()
     )
 
-    db.add(driver)
-    db.commit()
-    db.refresh(driver)
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already exists",
+        )
 
-    return driver
+    # Check duplicate User phone
+    existing_phone = (
+        db.query(User)
+        .filter(User.phone == data.phone) 
+        .first()
+    )
+
+    if existing_phone:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Phone already exists",
+        )
+
+    try:
+        # --------------------------------
+        # 1. Create User account
+        # --------------------------------
+
+        hashed_password = bcrypt.hashpw(
+            data.password.encode("utf-8"),
+            bcrypt.gensalt(),
+        ).decode("utf-8")
+
+        user = User(
+            name=data.fullName,
+            email=data.email,
+            password=hashed_password,
+            phone=data.phone,
+            gender=data.gender,
+            role=Role.DRIVER,
+        )
+
+        db.add(user)
+        db.flush()
+
+        # --------------------------------
+        # 2. Create Driver profile
+        # --------------------------------
+
+        driver = Driver(
+            fullName=data.fullName,
+            phone=data.phone,
+            email=data.email,
+            licenseNumber=data.licenseNumber,
+            licenseExpiry=data.licenseExpiry,
+            isPartTime=data.isPartTime,
+            isAvailable=data.isAvailable,
+            licenseImage=data.licenseImage,
+            rcImage=data.rcImage,
+            profileImage=data.profileImage,
+            whatsappPhone=data.whatsappPhone,
+            altPhone=data.altPhone,
+            licenseIssueDate=data.licenseIssueDate,
+            dob=data.dob,
+            gender=data.gender,
+            bloodGroup=data.bloodGroup,
+            aadhaarNumber=data.aadhaarNumber,
+            panNumber=data.panNumber,
+            voterId=data.voterId,
+            address=data.address,
+            assignedVehicleId=data.assignedVehicleId,
+            vendorId=data.vendorId,
+            userId=user.id,
+        )
+
+        db.add(driver)
+
+        # --------------------------------
+        # 3. Save both records
+        # --------------------------------
+
+        db.commit()
+
+        db.refresh(driver)
+
+        return driver
+
+    except Exception:
+        db.rollback()
+        raise
 
 
 def update_driver(

@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
 from typing import Optional
@@ -7,7 +6,8 @@ from typing import Optional
 class DriverCreate(BaseModel):
     fullName: str
     phone: str
-    email: Optional[EmailStr] = None
+    email: EmailStr
+    password: str
 
     licenseNumber: str
     licenseExpiry: datetime
@@ -36,7 +36,6 @@ class DriverCreate(BaseModel):
 
     assignedVehicleId: Optional[int] = None
     vendorId: Optional[int] = None
-    userId: Optional[int] = None
 
 
 class DriverUpdate(BaseModel):
@@ -71,7 +70,6 @@ class DriverUpdate(BaseModel):
 
     assignedVehicleId: Optional[int] = None
     vendorId: Optional[int] = None
-    userId: Optional[int] = None
 
 
 class DriverResponse(BaseModel):
