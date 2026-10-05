@@ -1,172 +1,173 @@
-
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./Dashboard.css";
 
-interface StoredUser {
-  id: number;
-  name: string;
-  email: string;
-  phone: string | null;
-  role: string;
+interface DashboardStats {
+  total_users: number;
+  total_drivers: number;
+  available_drivers: number;
+  total_vehicles: number;
+  total_vendors: number;
+  total_bookings: number;
+  pending_bookings: number;
+  total_trips: number;
+  ongoing_trips: number;
+  completed_trips: number;
+  total_invoices: number;
+  total_feedback: number;
 }
 
 function Dashboard() {
-  const navigate = useNavigate();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const token = localStorage.getItem("token");
-  const storedUser = localStorage.getItem("user");
+  useEffect(() => {
+    let cancelled = false;
 
-  const user: StoredUser | null = storedUser
-    ? JSON.parse(storedUser)
-    : null;
+    const loadDashboardStats = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/dashboard/stats`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-    navigate("/login", { replace: true });
-  };
+        if (!response.ok) {
+          throw new Error("Failed to load dashboard statistics");
+        }
 
-  if (!token) {
-    navigate("/login", { replace: true });
-    return null;
+        const data: DashboardStats = await response.json();
+
+        if (!cancelled) {
+          setStats(data);
+          setError("");
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error(err);
+
+        if (!cancelled) {
+          setError("Unable to load dashboard statistics");
+          setLoading(false);
+        }
+      }
+    };
+
+    loadDashboardStats();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="dashboard">
+        <h1>Dashboard</h1>
+        <p>Loading dashboard...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard">
+        <h1>Dashboard</h1>
+        <p className="dashboard-error">{error}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="dashboard-page">
-      {/* Sidebar */}
-      <aside className="dashboard-sidebar">
-        <div className="sidebar-logo">
-          <img
-            src="/gemini-svg.svg"
-            alt="DOTRIP"
-            className="dashboard-logo"
-          />
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Welcome to DOTRIP Admin Dashboard</p>
+        </div>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h3>Users</h3>
+          <div className="stat-number">
+            {stats?.total_users ?? 0}
+          </div>
         </div>
 
-        <nav className="sidebar-nav">
-          <button className="nav-item active">
-            <span>⌂</span>
-            Dashboard
-          </button>
-
-          <button className="nav-item">
-            <span>✈</span>
-            Trips
-          </button>
-
-          <button className="nav-item">
-            <span>▣</span>
-            Bookings
-          </button>
-
-          <button className="nav-item">
-            <span>♙</span>
-            Users
-          </button>
-
-          <button className="nav-item">
-            <span>⚙</span>
-            Settings
-          </button>
-        </nav>
-
-        <button
-          className="logout-button"
-          onClick={handleLogout}
-        >
-          <span>↪</span>
-          Logout
-        </button>
-      </aside>
-
-      {/* Main content */}
-      <main className="dashboard-main">
-        <header className="dashboard-header">
-          <div>
-            <span className="dashboard-eyebrow">
-              DOTRIP DASHBOARD
-            </span>
-
-            <h1>Welcome back{user?.name ? `, ${user.name}` : ""}</h1>
-
-            <p>
-              Manage your DOTRIP operations from one place.
-            </p>
+        <div className="stat-card">
+          <h3>Drivers</h3>
+          <div className="stat-number">
+            {stats?.total_drivers ?? 0}
           </div>
+          <p>
+            {stats?.available_drivers ?? 0} available
+          </p>
+        </div>
 
-          <div className="user-profile">
-            <div className="user-avatar">
-              {user?.name
-                ? user.name.charAt(0).toUpperCase()
-                : "U"}
-            </div>
-
-            <div className="user-details">
-              <strong>{user?.name || "User"}</strong>
-              <span>{user?.role || "User"}</span>
-            </div>
+        <div className="stat-card">
+          <h3>Vehicles</h3>
+          <div className="stat-number">
+            {stats?.total_vehicles ?? 0}
           </div>
-        </header>
+        </div>
 
-        {/* Overview cards */}
-        <section className="dashboard-cards">
-          <div className="dashboard-card">
-            <div className="card-icon">✈</div>
-            <span>Total Trips</span>
-            <strong>—</strong>
-            <small>Coming soon</small>
+        <div className="stat-card">
+          <h3>Vendors</h3>
+          <div className="stat-number">
+            {stats?.total_vendors ?? 0}
           </div>
+        </div>
 
-          <div className="dashboard-card">
-            <div className="card-icon">▣</div>
-            <span>Bookings</span>
-            <strong>—</strong>
-            <small>Coming soon</small>
+        <div className="stat-card">
+          <h3>Bookings</h3>
+          <div className="stat-number">
+            {stats?.total_bookings ?? 0}
           </div>
+          <p>
+            {stats?.pending_bookings ?? 0} pending
+          </p>
+        </div>
 
-          <div className="dashboard-card">
-            <div className="card-icon">♙</div>
-            <span>Users</span>
-            <strong>—</strong>
-            <small>Coming soon</small>
+        <div className="stat-card">
+          <h3>Trips</h3>
+          <div className="stat-number">
+            {stats?.total_trips ?? 0}
           </div>
+          <p>
+            {stats?.ongoing_trips ?? 0} ongoing
+          </p>
+        </div>
 
-          <div className="dashboard-card">
-            <div className="card-icon">◷</div>
-            <span>Activity</span>
-            <strong>—</strong>
-            <small>Coming soon</small>
+        <div className="stat-card">
+          <h3>Completed Trips</h3>
+          <div className="stat-number">
+            {stats?.completed_trips ?? 0}
           </div>
-        </section>
+        </div>
 
-        {/* Content area */}
-        <section className="dashboard-content">
-          <div className="content-header">
-            <div>
-              <span className="dashboard-eyebrow">
-                OVERVIEW
-              </span>
-
-              <h2>Dashboard</h2>
-            </div>
+        <div className="stat-card">
+          <h3>Invoices</h3>
+          <div className="stat-number">
+            {stats?.total_invoices ?? 0}
           </div>
+        </div>
 
-          <div className="empty-dashboard">
-            <div className="empty-icon">✦</div>
-
-            <h3>Your dashboard is ready</h3>
-
-            <p>
-              DOTRIP modules will appear here as we migrate
-              them from the existing application.
-            </p>
+        <div className="stat-card">
+          <h3>Feedback</h3>
+          <div className="stat-number">
+            {stats?.total_feedback ?? 0}
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default Dashboard;
-

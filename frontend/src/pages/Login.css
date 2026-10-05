@@ -205,15 +205,44 @@
   width: 100%;
   height: 54px;
   padding: 0 48px;
+
+  box-sizing: border-box;
+
   border: 1px solid #dce1e8;
   border-radius: 12px;
   outline: none;
-  background: #fff;
-  color: #172033;
+
+  background-color: #ffffff !important;
+  color: #172033 !important;
+
   font-size: 14px;
+  font-weight: 500;
+
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.input-wrapper input::placeholder {
+  color: #a6adba;
+  opacity: 1;
+}
+
+.input-wrapper input:focus {
+  border-color: #172033;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(23, 32, 51, 0.08);
+}
+
+/* Browser autofill */
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:hover,
+.input-wrapper input:-webkit-autofill:focus,
+.input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #172033 !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  background-color: #ffffff !important;
 }
 
 .input-wrapper input::placeholder {

@@ -1,38 +1,90 @@
 import {
   BrowserRouter,
-  Routes,
-  Route,
   Navigate,
+  Route,
+  Routes,
 } from "react-router-dom";
 
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Drivers from "./pages/Drivers";
 
-function Dashboard() {
-  return (
-    <div>
-      <h1>DOTRIP Dashboard</h1>
-      <p>You are successfully logged in.</p>
-    </div>
-  );
-}
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Public routes */}
+        <Route element={<PublicRoute />}>
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+        </Route>
 
-        <Route
-          path="/"
-          element={<Navigate to="/login" replace />}
-        />
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
 
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
+
+            <Route
+              path="/drivers"
+              element={<Drivers />}
+            />
+
+            {/* Coming modules */}
+            <Route
+              path="/vehicle-types"
+              element={<div>Vehicle Types</div>}
+            />
+
+            <Route
+              path="/vehicles"
+              element={<div>Vehicles</div>}
+            />
+
+            <Route
+              path="/vendors"
+              element={<div>Vendors</div>}
+            />
+
+            <Route
+              path="/bookings"
+              element={<div>Bookings</div>}
+            />
+
+            <Route
+              path="/trips"
+              element={<div>Trips</div>}
+            />
+
+            <Route
+              path="/invoices"
+              element={<div>Invoices</div>}
+            />
+
+          </Route>
+        </Route>
+
+        {/* Default route */}
         <Route
           path="*"
-          element={<Navigate to="/login" replace />}
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
         />
+
       </Routes>
     </BrowserRouter>
   );

@@ -177,7 +177,6 @@ function Login() {
 
               <div className="input-wrapper">
                 <span className="input-icon">
-                  @
                 </span>
 
                 <input
@@ -204,7 +203,6 @@ function Login() {
 
               <div className="input-wrapper">
                 <span className="input-icon">
-                  •••
                 </span>
 
                 <input
