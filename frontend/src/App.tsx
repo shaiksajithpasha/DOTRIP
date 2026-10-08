@@ -8,10 +8,16 @@ import {
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Drivers from "./pages/Drivers";
-
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import Users from "./pages/Users";
+import VehicleTypes from "./pages/VehicleTypes";
+import Vehicles from "./pages/Vehicles";
+import Vendors from "./pages/Vendors";
+import Bookings from "./pages/Bookings";
+import Trips from "./pages/Trips";
+import Invoices from "./pages/Invoices";
 
 function App() {
   return (
@@ -39,38 +45,34 @@ function App() {
               path="/drivers"
               element={<Drivers />}
             />
-
-            {/* Coming modules */}
-            <Route
-              path="/vehicle-types"
-              element={<div>Vehicle Types</div>}
+            <Route 
+              path="/users" 
+              element={<Users />} 
             />
-
-            <Route
-              path="/vehicles"
-              element={<div>Vehicles</div>}
+              <Route 
+              path="/vehicle-types" 
+              element={<VehicleTypes />} 
             />
-
-            <Route
-              path="/vendors"
-              element={<div>Vendors</div>}
+              <Route 
+              path="/vehicles" 
+              element={<Vehicles />} 
             />
-
-            <Route
-              path="/bookings"
-              element={<div>Bookings</div>}
+              <Route 
+              path="/vendors" 
+              element={<Vendors />} 
             />
-
-            <Route
-              path="/trips"
-              element={<div>Trips</div>}
+              <Route 
+              path="/bookings" 
+              element={<Bookings />} 
             />
-
-            <Route
-              path="/invoices"
-              element={<div>Invoices</div>}
+              <Route 
+              path="/trips" 
+              element={<Trips />} 
             />
-
+              <Route 
+              path="/invoices" 
+              element={<Invoices />} 
+            />
           </Route>
         </Route>
 
